@@ -56,6 +56,9 @@ def get_user_profile(request):
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request):
+    # TODO: I feel its somewhat unsafe to only require authentication maybe
+    #  we should verify that the user you're about to change is the same
+    #  as the token owner.
     user = request.user
     serializer = UserSerializerWithToken(user, many=False)
 
