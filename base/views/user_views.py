@@ -91,6 +91,24 @@ def get_user_by_id(request, pk):
     return Response(serializer.data)
 
 
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def update_user(request, pk):
+
+    user = User.objects.get(id=pk)
+    data = request.data
+
+    user.first_name = data["name"]
+    user.username = data["email"]
+    user.email = data["email"]
+    user.is_staff = data["isAdmin"]
+
+    user.save()
+
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
 @api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def delete_user(request, pk):
