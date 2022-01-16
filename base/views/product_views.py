@@ -1,17 +1,48 @@
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-
 from rest_framework.response import Response
-from base.models import Product, Review
 
-# from .products import products
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from base.models import Product, Review
 from base.serializers import ProductSerializer
 
 
 @api_view(["GET"])
 def get_products(request):
-    products = Product.objects.all()
+    items_per_page = 6
+
+    query = request.query_params.get("keyword")
+    # print(f"query: {query}")
+    if not query:
+        query = ""
+    products = Product.objects.filter(name__icontains=query)
+
+    page = request.query_params.get("page")
+    paginator = Paginator(products, items_per_page)
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+    page = int(page)
+
+    serializer = ProductSerializer(products, many=True)
+
+    return Response(
+        {"products": serializer.data, "page": page, "pages": paginator.num_pages}
+    )
+
+
+@api_view(["GET"])
+def get_top_products(request):
+    products = Product.objects.filter(rating__gte=4).order_by("-rating")[:5]
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
