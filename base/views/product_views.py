@@ -87,7 +87,7 @@ def update_product(request, pk):
     product.name = data["name"]
     product.price = data["price"]
     product.brand = data["brand"]
-    product.counInStock = data["countInStock"]
+    product.countInStock = data["countInStock"]
     product.category = data["category"]
     product.description = data["description"]
 

@@ -25,9 +25,10 @@ load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
+    "storages",
     "base.apps.BaseConfig",
 ]
 
@@ -80,6 +82,7 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     # Cors headers should be at top always
     "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -171,7 +174,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_ROOT = "static/images"
+MEDIA_ROOT = BASE_DIR / "static/images"
+STATIC_ROOT = BASE_DIR / "static_prod"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -180,3 +185,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # TODO: select only frontend origins once testing is finished
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID = os.environ.get("S3_BUCKET_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("S3_BUCKET_SECRET_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME")
+# To remove the querystring from the image url (good because it hides access key):
+AWS_QUERYSTRING_AUTH = False
+
+if os.getcwd() == "/app":
+    DEBUG = False
