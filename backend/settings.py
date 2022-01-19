@@ -25,7 +25,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", os.environ.get("GCP_URL")]
@@ -195,5 +195,5 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME")
 # To remove the querystring from the image url (good because it hides access key):
 AWS_QUERYSTRING_AUTH = False
 
-if os.getcwd() == "/app":
-    DEBUG = False
+# if os.getcwd() == "/app":
+#     DEBUG = False
