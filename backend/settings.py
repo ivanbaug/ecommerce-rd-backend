@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.127.0.0.1",
     "https://*.localhost",
     f'https://*.{os.environ.get("GCP_URL")}',
+    f'https://{os.environ.get("GCP_URL")}/',
 ]
 
 
