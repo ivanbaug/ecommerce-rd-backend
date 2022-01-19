@@ -195,5 +195,8 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME")
 # To remove the querystring from the image url (good because it hides access key):
 AWS_QUERYSTRING_AUTH = False
 
+# When deploying on a server this allows access to the admin panel
+CSRF_TRUSTED_ORIGINS = [os.environ.get("GCP_URL")]
+
 # if os.getcwd() == "/app":
 #     DEBUG = False
